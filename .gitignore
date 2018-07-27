@@ -1,0 +1,16 @@
+RobotChallenge.v12.suo
+.vs/
+*.dll
+*.pdb
+*.suo
+*.cache
+*.user
+Robot.Tournament/obj/
+*.exe
+RobotChallangeBuilder/RobotChallangeBuilder/obj/
+Robot.Common.Test/obj/
+RobotChallangeBuilder/RobotChallangeBuilder/bin/
+Robot.Common/obj/
+RobotChallenge/bin/
+RobotChallenge/obj/
+Sample.TestProject/obj/
