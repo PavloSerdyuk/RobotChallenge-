@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Robot.Common</id>
+    <version>2.0</version>
+    <title>Robot challange common</title>
+    <authors>Pavlo Serdyuk</authors>
+    <owners>Pavlo Serdyuk</owners>
+    <projectUrl>https://github.com/PavloSerdyuk/RobotChallenge-</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Robot AI challange common lib. </description>
+    <copyright>Copyright 2018</copyright>
+    <tags>Robot Challange KPZ</tags>
+  </metadata>
+</package>

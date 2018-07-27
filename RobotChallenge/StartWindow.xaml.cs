@@ -81,5 +81,11 @@ namespace RobotChallenge
             variant = 8;
             buttonStart.IsEnabled = true;
         }
+
+        private void RadioButton_Checked_8(object sender, RoutedEventArgs e)
+        {
+            variant = 9;
+            buttonStart.IsEnabled = true;
+        }
     }
 }

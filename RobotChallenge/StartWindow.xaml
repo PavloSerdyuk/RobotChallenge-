@@ -17,6 +17,7 @@
             <RadioButton Content="Варіант 6" Checked="RadioButton_Checked_5" Margin="10,0,0,0" FontSize="16"/>
             <RadioButton Content="Варіант 7" Checked="RadioButton_Checked_6" Margin="10,0,0,0" FontSize="16"/>
             <RadioButton Content="Варіант 8" Checked="RadioButton_Checked_7" Margin="10,0,0,0" FontSize="16"/>
+            <RadioButton Content="Варіант 9" Checked="RadioButton_Checked_8" Margin="10,0,0,0" FontSize="16"/>
 
         </StackPanel>
         <Button Grid.Row="1"  Content="OK" Height="23" x:Name="buttonStart" Click="buttonStart_Click" Margin="95,0,95,0" />
