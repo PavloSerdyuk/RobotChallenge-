@@ -136,74 +136,70 @@ namespace Robot.Tournament
         }
 
         public int MaxNumbersOfRound { set; get; }
+
         public void InitializeOwnersAndRobots(int maxNumbersOfRound)
         {
             MaxNumbersOfRound = maxNumbersOfRound;
             _roundNumber = 0;
-            try
+
+            //  RobotRegistry dsr = new RobotRegistry();
+            // ContainerBootstrapper.BootstrapStructureMap();
+            //var t = ObjectFactory.GetInstance<IRobotAlgorithm>();
+            //var list = ObjectFactory.GetAllInstances<IRobotAlgorithm>().ToList();
+            var list = ReflectionScanner.Scan();
+            Robots = new List<Common.Robot>();
+
+            var initialOwnersList = list.Select(algorithm => new Owner {Algorithm = algorithm}).ToList();
+            var r = new Random();
+
+            //Make order random
+            Owners = new List<Owner>();
+
+            while (initialOwnersList.Count > 0)
             {
-                //  RobotRegistry dsr = new RobotRegistry();
-                // ContainerBootstrapper.BootstrapStructureMap();
-                //var t = ObjectFactory.GetInstance<IRobotAlgorithm>();
-                //var list = ObjectFactory.GetAllInstances<IRobotAlgorithm>().ToList();
-                var list = ReflectionScanner.Scan();
-                Robots = new List<Common.Robot>();
+                var index = r.Next(initialOwnersList.Count);
+                Owners.Add(initialOwnersList[index]);
+                initialOwnersList.RemoveAt(index);
+            }
 
-                var initialOwnersList = list.Select(algorithm => new Owner {Algorithm = algorithm}).ToList();
-                var r = new Random();
+            var listPosition = new List<Position>();
 
-                //Make order random
-                Owners = new List<Owner>();
+            while (listPosition.Count < Owners.Count)
+            {
+                var newPosition = new Position {X = r.Next(Map.MaxPozition.X), Y = r.Next(Map.MaxPozition.Y)};
 
-                while (initialOwnersList.Count > 0)
+                var nearPozition = listPosition.FirstOrDefault(pos =>
+                    (Math.Abs(newPosition.X - pos.X) < 10) && (Math.Abs(newPosition.Y - pos.Y) < 10));
+                if (nearPozition == null)
+                    listPosition.Add(newPosition);
+            }
+
+
+            for (int i = 0; i < InitialRobotsCount; i++)
+            {
+                for (int ownerIndex = 0; ownerIndex < Owners.Count; ownerIndex++)
                 {
-                    var index = r.Next(initialOwnersList.Count);
-                    Owners.Add(initialOwnersList[index]);
-                    initialOwnersList.RemoveAt(index);
-                }
-
-                var listPosition = new List<Position>();
-
-                while (listPosition.Count < Owners.Count)
-                {
-                    var newPosition = new Position { X = r.Next(Map.MaxPozition.X), Y = r.Next(Map.MaxPozition.Y) };
-
-                    var nearPozition = listPosition.FirstOrDefault(pos => (Math.Abs(newPosition.X - pos.X) < 10) && (Math.Abs(newPosition.Y - pos.Y) < 10));
-                    if (nearPozition == null)
-                        listPosition.Add(newPosition);
-                }
-
-
-                for (int i = 0; i < InitialRobotsCount; i++)
-                {
-                    for (int ownerIndex = 0; ownerIndex < Owners.Count; ownerIndex++)
+                    Position position;
+                    do
                     {
-                        Position position;
-                        do
+                        position = new Position
                         {
-                            position = new Position
-                                           {
-                                               X = listPosition[ownerIndex].X - 20 + r.Next(41),
-                                               Y = listPosition[ownerIndex].Y - 20 + r.Next(41),
-                                           };
+                            X = listPosition[ownerIndex].X - 20 + r.Next(41),
+                            Y = listPosition[ownerIndex].Y - 20 + r.Next(41),
+                        };
+                    } while (!Map.IsValid(position) || (Robots.Any(rob => rob.Position == position)));
+
+                    Robots.Add(new Common.Robot
+                        {
+                            Energy = 100,
+                            Owner = Owners[ownerIndex],
+                            Position = position
                         }
-                        while (!Map.IsValid(position) || (Robots.Any(rob => rob.Position == position)));
-
-                        Robots.Add(new Common.Robot
-                                       {
-                                           Energy = 100,
-                                           Owner = Owners[ownerIndex],
-                                           Position = position
-                                       }
                     );
-                    }
                 }
+            }
 
-            }
-            catch (Exception e)
-            {
-                Logger.LogMessage(null, e.Message, LogValue.Error);
-            }
+
         }
 
         private int _currentRobotIndex;

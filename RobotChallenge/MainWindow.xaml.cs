@@ -40,37 +40,43 @@ namespace RobotChallenge
 
         public ObservableCollection<LogMessage> Messsages { get; set; }
         private const int maxNumber = 13;
+
         public void LogMessage(object sender, LogEventArgs args)
         {
 
+            var c = new SolidColorBrush(Colors.Red);
+            var n = "";
+            if (args.Owner != null)
+            {
+                c = new SolidColorBrush(ColorsFactory.OwnerColors[args.Owner]);
+                n = args.Owner.Name;
+            }
 
-                                   var c = new SolidColorBrush(Colors.Red);
-                                   var n = "";
-                                   if (args.Owner != null)
-                                   {
-                                       c = new SolidColorBrush(ColorsFactory.OwnerColors[args.Owner]);
-                                       n = args.Owner.Name;
-                                   }
+            if (!IsLogVisisble()) return;
+            Messsages.Insert(0, new LogMessage() {Color = c, Message = args.Message, Name = n});
 
-                                   if (IsLogVisisble())
-                                   {
-                                       Messsages.Insert(0, new LogMessage() { Color = c, Message = args.Message, Name = n });
-
-                                       if (Messsages.Count > maxNumber)
-                                           Messsages.RemoveAt(maxNumber);
-                                   }
-
+            if (Messsages.Count > maxNumber)
+                Messsages.RemoveAt(maxNumber);
         }
 
         public void InitializeChellange(int variant)
         {
-            _map = new Map(variant, ReflectionScanner.ScanLibs().Length*Runner.InitialRobotsCount);
-            _runner = new Runner(_map, ModelChanged);
-            ColorsFactory.Initialize(_runner.Owners);
-            PaintRobots(_runner.Robots);
-            PaintStations();
-            this.Height = 1250;
-            BindStatistics();
+            try
+            {
+                _map = new Map(variant, ReflectionScanner.ScanLibs().Length * Runner.InitialRobotsCount);
+                _runner = new Runner(_map, ModelChanged);
+                ColorsFactory.Initialize(_runner.Owners);
+                PaintRobots(_runner.Robots);
+                PaintStations();
+                this.Height = 1250;
+                BindStatistics();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                throw;
+            }
+            
         }
 
         private void BindStatistics()
