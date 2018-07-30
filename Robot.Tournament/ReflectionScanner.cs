@@ -21,20 +21,28 @@ namespace Robot.Tournament
         public static List<IRobotAlgorithm> Scan()
         {
             var result = new List<IRobotAlgorithm>();
-            string[] filePaths = ScanLibs();
+            var filePaths = ScanLibs();
 
             foreach (var filePath in filePaths)
             {
-                var a = Assembly.LoadFrom(filePath);
-                Type[] allTypes = a.GetTypes();
-
-                var list = allTypes.Where(t => typeof (IRobotAlgorithm).IsAssignableFrom(t)).ToList();
-                if (list.Count >0)
+                try
                 {
-                    var algor = list[0];
-                    var newInstance = a.CreateInstance(algor.ToString());
-                    result.Add((IRobotAlgorithm)newInstance);
+                    var a = Assembly.LoadFrom(filePath);
+                    var allTypes = a.GetTypes();
+
+                    var list = allTypes.Where(t => typeof(IRobotAlgorithm).IsAssignableFrom(t)).ToList();
+                    if (list.Count > 0)
+                    {
+                        var algor = list[0];
+                        var newInstance = a.CreateInstance(algor.ToString());
+                        result.Add((IRobotAlgorithm) newInstance);
+                    }
                 }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error loading dll from: {filePath}. Internal error: {ex.Message}");
+                }
+
             }
             return result;
         }

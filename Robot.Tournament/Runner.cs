@@ -207,6 +207,7 @@ namespace Robot.Tournament
         }
 
         private int _currentRobotIndex;
+
         public void DoStep()
         {
             var args = new UpdateViewAfterRobotStepEventArgs();
@@ -242,14 +243,13 @@ namespace Robot.Tournament
                     else
                     {
                         Logger.LogMessage(owner,
-                                          String.Format("{0} is nasty cheater, let's kill his robot for that ))",
-                                                        Robots[_currentRobotIndex].Owner.Name), LogValue.High);
+                            $"{Robots[_currentRobotIndex].Owner.Name} is nasty cheater, let's kill his robot for that ))", LogValue.High);
                         Robots[_currentRobotIndex].Energy = 0;
                     }
                 }
                 catch (Exception e)
                 {
-                    Logger.LogMessage(owner, string.Format("Error: {0} ", e.Message), LogValue.Error);
+                    Logger.LogMessage(owner, $"Error: {e.Message} ", LogValue.Error);
                     //simply do nothing
                     _callback(null, args);
 
@@ -262,36 +262,11 @@ namespace Robot.Tournament
 
         public void PrepareNextRound()
         {
-            GC.Collect();
             _currentRobotIndex = 0;
             _roundNumber++;
             Logger.LogRound(_roundNumber);
             UpdateResources();
         }
-
-        /*
-        public void RunTournament(int maxNumbersOfRound)
-        {
-            
-            
-            while (RoundNumber < maxNumbersOfRound && OwnerCount > 1)
-            {
-
-                
-
-                for (int robotIndex = 0; robotIndex < Robots.Count; robotIndex++)
-                {
-                   
-                    }
-                }
-
-                ClearOldRobots();
-                
-                var stat = CalculateOwnerStatistics();
-                //LogRound(stat);
-            }
-        }*/
-
     }
     
 

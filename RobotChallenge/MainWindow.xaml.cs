@@ -60,8 +60,6 @@ namespace RobotChallenge
                                            Messsages.RemoveAt(maxNumber);
                                    }
 
-            
-                               ///}));
         }
 
         public void InitializeChellange(int variant)
@@ -164,11 +162,6 @@ namespace RobotChallenge
                     currentAnimation.Completed += new EventHandler(ViewUpdatedChanged);
                     currentAnimation.Begin();
                 }
-                
-
-
-
-
             }
 
             else
@@ -209,7 +202,6 @@ namespace RobotChallenge
             }
             catch (Exception ex)
             {
-                Debug.Write("asd");
                 throw ex;
             }
 
@@ -224,7 +216,6 @@ namespace RobotChallenge
                 RobotGrid.Children.Add(control);
                 SetPosition(control, station.Position);
             }
-
         }
 
         private void SetPosition(EnergyStationControl control, Position position)

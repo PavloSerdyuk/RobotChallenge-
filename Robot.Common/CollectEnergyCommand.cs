@@ -7,8 +7,6 @@ namespace Robot.Common
 {
     public sealed class CollectEnergyCommand : RobotCommand
     {
-
-        
         public override UpdateViewAfterRobotStepEventArgs ChangeModel(IList<Robot> robots, int currentIndex, Map map)
         {
             var result = new UpdateViewAfterRobotStepEventArgs();
@@ -16,7 +14,7 @@ namespace Robot.Common
             var myRobot = robots[currentIndex];
             var resources = map.GetNearbyResources(myRobot.Position, Variant.GetInstance().CollectingDistance);
             if (resources.Count == 0)
-                Description = String.Format("FAILED: no resource to collect energy");
+                Description = "FAILED: no resource to collect energy";
 
             foreach (var energyStation in resources)
             {
@@ -30,7 +28,7 @@ namespace Robot.Common
                 }
                 else
                 {
-                    Description = String.Format("ERROR: station is null");
+                    Description = "ERROR: station is null";
                 }
                 
             }

@@ -8,7 +8,22 @@ namespace Robot.Common
     public sealed class MoveCommand : RobotCommand
     {
         public Position NewPosition { get; set; }
-        
+
+        private int Min2D(int x1, int x2)
+        {
+            int[] nums = 
+            {
+                (int) Math.Pow(x1 - x2, 2),
+                (int) Math.Pow(x1 - x2 + 100, 2),
+                (int) Math.Pow(x1 - x2 - 100, 2)
+            };
+            return nums.Min();
+        }
+
+        private int CalculateLoss(Position p1, Position p2)
+        {
+            return Min2D(p1.X , p2.X) + Min2D(p1.Y , p2.Y);
+        }
 
         public override UpdateViewAfterRobotStepEventArgs ChangeModel(IList<Robot> robots, int currentIndex, Map map)
         {
@@ -17,24 +32,22 @@ namespace Robot.Common
             //skip movement if not valid
             if (!map.IsValid(NewPosition))
             {
-                Description = string.Format("FAILED: {0} position not valid ", NewPosition);
+                Description = $"FAILED: {NewPosition} position not valid ";
                 return result;
             }
 
 
             var myRobot = robots[currentIndex];
             var oldPosition = robots[currentIndex].Position;
-            int moveEnergyLoss = (int)(Math.Pow(NewPosition.X - oldPosition.X, 2) + Math.Pow(NewPosition.Y - oldPosition.Y, 2));
+            var moveEnergyLoss = CalculateLoss(NewPosition, oldPosition);
 
             Robot movedRobot = null;
-
 
             foreach (var robot in robots)
             {
 
                 if ((robot != myRobot) && (robot.Position == NewPosition))
                 {
-
                     //moving 
                     //var energyOfFightLoss =  Math.Min(robot.Energy, myRobot.Energy);
                     moveEnergyLoss += Variant.GetInstance().AttackEnergyLoss;
@@ -73,7 +86,7 @@ namespace Robot.Common
                 movedRobot.Energy -= (int)(movedRobot.Energy * stoleRate);
                 result.MovedFrom.Insert(0, movedFrom);
                 result.MovedTo.Insert(0, movedRobot.Position);
-                Description = string.Format("Attacked {0} robot at ({1})", movedRobot.Owner.Name, NewPosition);
+                Description = $"Attacked {movedRobot.Owner.Name} robot at ({NewPosition})";
             }
 
             return result;
