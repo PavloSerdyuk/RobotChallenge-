@@ -171,6 +171,18 @@ namespace Robot.Common
                     StoleRateEnergyAtAttack = 0.1;
                     AttackEnergyLoss = 30;
                     break;
+                case 10:
+                    MaxEnergyGrowth = 50;
+                    MinEnergyGrowth = 10;
+                    MaxStationEnergy = 20000;
+                    CollectingDistance = 4;
+                    MaxEnergyCanCollect = 500;
+
+                    EnergyStationForAttendant = 10;
+                    EnergyLossToCreateNewRobot = 1000;
+                    StoleRateEnergyAtAttack = 0.3;
+                    AttackEnergyLoss = 20;
+                    break;
                 default:
                     throw new Exception("Not supported variant");
                     
