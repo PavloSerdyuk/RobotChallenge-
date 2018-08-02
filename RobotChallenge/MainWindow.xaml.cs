@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Mime;
 using System.Threading;
 using System.Windows;
@@ -13,6 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Robot.Common;
 using Robot.Tournament;
+using RobotChallenge;
 
 namespace RobotChallenge
 {
@@ -71,12 +73,17 @@ namespace RobotChallenge
                 this.Height = 1250;
                 BindStatistics();
             }
-            catch (Exception e)
+            
+            catch (FileLoadException ex)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show($"Error loading dll. Possible reason - dll was downloaded from Internet and should bu unblocked (in file properties). Error: {ex.Message}. Internal exception {ex.InnerException}");
                 throw;
             }
-            
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}. Internal exception {ex.InnerException}");
+                throw;
+            }
         }
 
         private void BindStatistics()

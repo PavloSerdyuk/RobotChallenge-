@@ -10,7 +10,7 @@ namespace Robot.Tournament
 {
     public class ReflectionScanner
     {
-        
+
         public static string DirPath = AppDomain.CurrentDomain.BaseDirectory + @"AlgorithmDlls\";
 
         public static string[] ScanLibs()
@@ -25,28 +25,26 @@ namespace Robot.Tournament
 
             foreach (var filePath in filePaths)
             {
-                try
-                {
-                    var a = Assembly.LoadFrom(filePath);
-                    var allTypes = a.GetTypes();
+                var a = Assembly.LoadFrom(filePath);
+                var allTypes = a.GetTypes();
 
-                    var list = allTypes.Where(t => typeof(IRobotAlgorithm).IsAssignableFrom(t)).ToList();
-                    if (list.Count > 0)
-                    {
-                        var algor = list[0];
-                        var newInstance = a.CreateInstance(algor.ToString());
-                        result.Add((IRobotAlgorithm) newInstance);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Error loading dll from: {filePath}. Internal error: {ex.Message}");
-                }
+                var list = allTypes.Where(t => typeof(IRobotAlgorithm).IsAssignableFrom(t)).ToList();
+                if (list.Count <= 0) continue;
 
+                var algor = list[0];
+                var newInstance = (IRobotAlgorithm) a.CreateInstance(algor.ToString());
+
+                if (newInstance == null)
+                    throw new Exception($"Could not initialize instance in dll: {filePath}");
+
+                if (newInstance.Author == null)
+                    throw new Exception($"Author name could not be null in dll: {filePath}");
+
+                result.Add(newInstance);
             }
             return result;
         }
 
-        
+
     }
 }

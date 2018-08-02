@@ -98,7 +98,7 @@ namespace Robot.Tournament
                 st.Owner = owner;
                 result.Add(st);
             }
-            result.Sort((a, b) => a.Owner.Name.CompareTo(b.Owner.Name));
+            result.Sort((a, b) => string.Compare(a.Owner.Name, b.Owner.Name, StringComparison.Ordinal));
             return result;
         }
 
