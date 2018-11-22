@@ -17,7 +17,11 @@ namespace Robot.Common
             var energyLossToCreateNewRobot = Variant.GetInstance().EnergyLossToCreateNewRobot;
             var energyLoss = energyLossToCreateNewRobot + NewRobotEnergy;
 
-            if (robots.Count(r => r.Owner.Name == myRobot.Owner.Name) >= 100)
+            if (NewRobotEnergy <= 0)
+            {
+                Description = $"FAILED: new robot energy of {myRobot.Owner.Name} is less or equal zero .";
+
+            } else if (robots.Count(r => r.Owner.Name == myRobot.Owner.Name) >= 100)
             {
                 Description = $"FAILED: number of {myRobot.Owner.Name} robots reached 100.";
             }
