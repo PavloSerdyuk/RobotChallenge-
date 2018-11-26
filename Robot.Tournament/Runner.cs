@@ -21,8 +21,6 @@ namespace Robot.Tournament
         public RobotStepHistory History;
     }
 
-    
-
     public class Runner
     {
         public const int InitialRobotsCount = 10;
@@ -31,6 +29,7 @@ namespace Robot.Tournament
         public Map Map { get; set; }
         public IList<Common.Robot> Robots { get; set; }
         public List<Owner> Owners;
+        public Dictionary<string, IRobotAlgorithm> Algorithms = new Dictionary<string, IRobotAlgorithm>();
         private int _roundNumber;
         private RobotStepCompletedEventHandler _callback;
 
@@ -41,29 +40,6 @@ namespace Robot.Tournament
             InitializeOwnersAndRobots(50);
         }
 
-        /*
-        private void LogRound(Dictionary<Owner, OwnerStatistics> ownerStatistics)
-        {
-            Log(String.Format("Round # {0}", _roundNumber), LogValue.High);
-            foreach (var owner in ownerStatistics.Keys)
-            {
-                var stat = ownerStatistics[owner];
-                if (stat.RobotsCount == 0)
-                    Log(String.Format("{0} lose the channange: place # {1}", owner.Name, ownerStatistics.Count), LogValue.High);
-                else
-                {
-                    Log(String.Format("{0} lose the channange: place # {1}", owner.Name, ownerStatistics.Count), LogValue.Medium);
-                    
-                }
-
-            }
-        }*/
-
-
-        private void PublishReslut(Dictionary<Owner, OwnerStatistics> ownerStatistics)
-        {
-
-        }
 
         private OwnerStatistics CalculateOwnerStatistics(Owner owner)
         {
@@ -122,10 +98,6 @@ namespace Robot.Tournament
             return copy;
         }
 
-
-
-
-
         public void UpdateResources()
         {
             foreach (var energyResource in Map.Stations)
@@ -147,9 +119,19 @@ namespace Robot.Tournament
             //var t = ObjectFactory.GetInstance<IRobotAlgorithm>();
             //var list = ObjectFactory.GetAllInstances<IRobotAlgorithm>().ToList();
             var list = ReflectionScanner.Scan();
+
+            foreach (var algorithnm in list)
+            {
+                if (Algorithms.ContainsKey(algorithnm.Author))
+                    throw new Exception($"At least 2 libraries of ssame author: {algorithnm.Author}. Tournament terminated.");
+                Algorithms.Add(algorithnm.Author, algorithnm);
+            }
+
             Robots = new List<Common.Robot>();
 
-            var initialOwnersList = list.Select(algorithm => new Owner {Algorithm = algorithm}).ToList();
+            var initialOwnersList = list.Select(algorithm => new Owner()).ToList();
+            
+
             var r = new Random();
 
             //Make order random
@@ -221,7 +203,7 @@ namespace Robot.Tournament
                 try
                 {
                     //make a copy to pass to the algorithm
-                    var command = owner.Algorithm.DoStep(CopyRopots(), _currentRobotIndex, Map.Copy());
+                    var command = Algorithms[owner.Name].DoStep(CopyRopots(), _currentRobotIndex, Map.Copy());
                     //To make sure that student are not cheating by adding new class
 
                     var type = command.GetType();

@@ -17,9 +17,10 @@ namespace Robot.Common
             var energyLossToCreateNewRobot = Variant.GetInstance().EnergyLossToCreateNewRobot;
             var energyLoss = energyLossToCreateNewRobot + NewRobotEnergy;
 
-            if (NewRobotEnergy <= 0)
+            //Fix hack with incorrect value of energy
+            if (NewRobotEnergy <= 0 || NewRobotEnergy > Int32.MaxValue/2)
             {
-                Description = $"FAILED: new robot energy of {myRobot.Owner.Name} is less or equal zero .";
+                Description = $"FAILED: illegal value for new robot energy of {myRobot.Owner.Name} .";
 
             } else if (robots.Count(r => r.Owner.Name == myRobot.Owner.Name) >= 100)
             {
@@ -41,7 +42,6 @@ namespace Robot.Common
             {
                 Description = "FAILED: not enough energy to create new robot";
             }
-
 
             return result;
         }

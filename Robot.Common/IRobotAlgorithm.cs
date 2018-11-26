@@ -9,7 +9,6 @@ namespace Robot.Common
     public interface IRobotAlgorithm
     {
         string Author { get; }
-        string Description { get; }
 
         /// <summary>
         /// Methods to oveeride in your algorithm
