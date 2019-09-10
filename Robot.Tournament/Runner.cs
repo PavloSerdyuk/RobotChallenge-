@@ -92,7 +92,7 @@ namespace Robot.Tournament
                     ownersCopy.Add(robot.Owner, robot.Owner.Copy());
                 }
 
-                copy.Add(new Common.Robot { Energy = robot.Energy, Position = robot.Position.Copy(), Owner = ownersCopy[robot.Owner] });
+                copy.Add(new Common.Robot { Energy = robot.Energy, Position = robot.Position.Copy(), Owner = ownersCopy[robot.Owner], OwnerName = robot.Owner.Name});
             }
 
             return copy;

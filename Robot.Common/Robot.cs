@@ -10,5 +10,6 @@ namespace Robot.Common
         public Position Position { get; set; }
         public int Energy { get; set; }
         public Owner Owner { get; set; }
+        public string OwnerName { get; set; }
     }
 }
