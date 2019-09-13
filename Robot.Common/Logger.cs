@@ -13,7 +13,7 @@ namespace Robot.Common
 
     public class LogEventArgs
     {
-        public Owner Owner { get; set; }
+        public string OwnerName { get; set; }
         public string Message { get; set; }
         public LogValue Priority { get; set; }
 
@@ -21,16 +21,16 @@ namespace Robot.Common
         {
         }
 
-        public LogEventArgs(Owner owner, string message)
+        public LogEventArgs(string owner, string message)
         {
-            Owner = owner;
+            OwnerName = owner;
             Message = message;
             Priority = LogValue.Normal;
         }
 
-        public LogEventArgs(Owner owner, string message, LogValue priority)
+        public LogEventArgs(string owner, string message, LogValue priority)
         {
-            Owner = owner;
+            OwnerName  = owner;
             Message = message;
             Priority = priority;
         }
@@ -45,9 +45,8 @@ namespace Robot.Common
 
         public static void LogRound(int roundNumber)
         {
-            Debug.WriteLine(string.Format( "ROUND NOMBER: {0}", roundNumber));
-            LogRoundEventHandler handler = OnLogRound;
-            if (handler != null) handler(null, new LogRoundEventArgs(){Number = roundNumber});
+            Debug.WriteLine($"ROUND NOMBER: {roundNumber}");
+            OnLogRound?.Invoke(null, new LogRoundEventArgs() { Number = roundNumber });
         }
 
         public static event LogEventHandler OnLogMessage;
@@ -55,20 +54,14 @@ namespace Robot.Common
         private static void LogMessage(LogEventArgs e)
         {
             Debug.WriteLine(e.Message);
-
-            LogEventHandler handler = OnLogMessage;
-            if (handler != null) handler(null, e);
+            OnLogMessage?.Invoke(null, e);
         }
 
-        public static void LogMessage(Owner owner, string message)
-        {
-            
-            LogMessage(new LogEventArgs(owner, message));
-        }
-
-        public static void LogMessage(Owner owner, string message, LogValue priority)
+        
+        public static void LogMessage(string owner, string message, LogValue priority = LogValue.Normal)
         {
             LogMessage(new LogEventArgs(owner, message, priority));
         }
+
     }
 }

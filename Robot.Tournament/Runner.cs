@@ -41,40 +41,40 @@ namespace Robot.Tournament
         }
 
 
-        private OwnerStatistics CalculateOwnerStatistics(Owner owner)
+        private OwnerStatistics CalculateOwnerStatistics(string ownerName)
         {
             var ownersStatistics = new OwnerStatistics();
             foreach (var robot in Robots)
             {
-                if (robot.Owner == owner)
-                {
-                    ownersStatistics.RobotsCount++;
-                    ownersStatistics.TotalEnergy += robot.Energy;
-                }
+                if (robot.OwnerName != ownerName) continue;
+
+                ownersStatistics.RobotsCount++;
+                ownersStatistics.TotalEnergy += robot.Energy;
             }
             return ownersStatistics;
         }
 
         public List<OwnerStatistics> CalculateOwnerStatistics()
         {
-            var ownersStatistics = new Dictionary<Owner, OwnerStatistics>();
+            var ownersStatistics = new Dictionary<string, OwnerStatistics>();
             foreach (var robot in Robots)
             {
-                if (!ownersStatistics.ContainsKey(robot.Owner))
+                if (!ownersStatistics.ContainsKey(robot.OwnerName))
                 {
 
-                    ownersStatistics.Add(robot.Owner, CalculateOwnerStatistics(robot.Owner));
+                    ownersStatistics.Add(robot.OwnerName, CalculateOwnerStatistics(robot.OwnerName));
                 }
             }
 
             var result = new List<OwnerStatistics>();
+
             foreach (var owner in ownersStatistics.Keys)
             {
                 var st = ownersStatistics[owner];
                 st.Owner = owner;
                 result.Add(st);
             }
-            result.Sort((a, b) => string.Compare(a.Owner.Name, b.Owner.Name, StringComparison.Ordinal));
+            result.Sort((a, b) => string.Compare(a.Owner, b.Owner, StringComparison.Ordinal));
             return result;
         }
 
@@ -87,12 +87,7 @@ namespace Robot.Tournament
             foreach (var robot in Robots)
             {
                 
-                if (! ownersCopy.ContainsKey(robot.Owner))
-                {
-                    ownersCopy.Add(robot.Owner, robot.Owner.Copy());
-                }
-
-                copy.Add(new Common.Robot { Energy = robot.Energy, Position = robot.Position.Copy(), Owner = ownersCopy[robot.Owner], OwnerName = robot.Owner.Name});
+                copy.Add(new Common.Robot { Energy = robot.Energy, Position = robot.Position.Copy(), OwnerName = robot.OwnerName});
             }
 
             return copy;
@@ -129,7 +124,7 @@ namespace Robot.Tournament
 
             Robots = new List<Common.Robot>();
 
-            var initialOwnersList = list.Select(algorithm => new Owner()).ToList();
+            var initialOwnersList = list.Select(algorithm => new Owner(){Name = algorithm.Author}).ToList();
             
 
             var r = new Random();
@@ -174,7 +169,7 @@ namespace Robot.Tournament
                     Robots.Add(new Common.Robot
                         {
                             Energy = 100,
-                            Owner = Owners[ownerIndex],
+                            OwnerName = Owners[ownerIndex].Name,
                             Position = position
                         }
                     );
@@ -194,8 +189,8 @@ namespace Robot.Tournament
 
             if (_currentRobotIndex >= Robots.Count)
                 PrepareNextRound();
-            var owner = Robots[_currentRobotIndex].Owner;
-            args.Owner = owner;
+            args.OwnerName = Robots[_currentRobotIndex].OwnerName;
+            var ownerName = args.OwnerName;
             args.RobotPosition = Robots[_currentRobotIndex].Position;
 
             if (Robots[_currentRobotIndex].Energy > 0)
@@ -203,7 +198,7 @@ namespace Robot.Tournament
                 try
                 {
                     //make a copy to pass to the algorithm
-                    var command = Algorithms[owner.Name].DoStep(CopyRopots(), _currentRobotIndex, Map.Copy());
+                    var command = Algorithms[args.OwnerName].DoStep(CopyRopots(), _currentRobotIndex, Map.Copy());
                     //To make sure that student are not cheating by adding new class
 
                     var type = command.GetType();
@@ -213,21 +208,21 @@ namespace Robot.Tournament
                     {
                         //command.RobotStepCompleted += _callback;
                         args = command.ChangeModel(Robots, _currentRobotIndex, Map);
-                        args.Owner = owner;
+                        args.OwnerName = ownerName;
                         args.RobotPosition = Robots[_currentRobotIndex].Position;
                         //command.Apply(Robots, _currentRobotIndex, Map);
-                        Logger.LogMessage(owner, command.Description, LogValue.Normal);
+                        Logger.LogMessage(ownerName, command.Description, LogValue.Normal);
                     }
                     else
                     {
-                        Logger.LogMessage(owner,
-                            $"{Robots[_currentRobotIndex].Owner.Name} is nasty cheater, let's kill his robot for that ))", LogValue.High);
+                        Logger.LogMessage(ownerName,
+                            $"{Robots[_currentRobotIndex].OwnerName} is nasty cheater, let's kill his robot for that ))", LogValue.High);
                         Robots[_currentRobotIndex].Energy = 0;
                     }
                 }
                 catch (Exception e)
                 {
-                    Logger.LogMessage(owner, $"Error: {e.Message} ", LogValue.Error);
+                    Logger.LogMessage(ownerName, $"Error: {e.Message} ", LogValue.Error);
                     //simply do nothing
                     _callback(null, args);
 
@@ -251,7 +246,7 @@ namespace Robot.Tournament
 
     public class OwnerStatistics
     {
-        public Owner Owner;
+        public string Owner;
         public int TotalEnergy { get; set; }
         public int RobotsCount { get; set; }
     }

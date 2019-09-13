@@ -20,16 +20,16 @@ namespace Robot.Common
             //Fix hack with incorrect value of energy
             if (NewRobotEnergy <= 0 || NewRobotEnergy > Int32.MaxValue/2)
             {
-                Description = $"FAILED: illegal value for new robot energy of {myRobot.Owner.Name} .";
+                Description = $"FAILED: illegal value for new robot energy of {myRobot.OwnerName} .";
 
-            } else if (robots.Count(r => r.Owner.Name == myRobot.Owner.Name) >= 100)
+            } else if (robots.Count(r => r.OwnerName == myRobot.OwnerName) >= 100)
             {
-                Description = $"FAILED: number of {myRobot.Owner.Name} robots reached 100.";
+                Description = $"FAILED: number of {myRobot.OwnerName} robots reached 100.";
             }
             else if (myRobot.Energy > energyLoss)
             {
                 var position = map.FindFreeCell(myRobot.Position, robots);
-                var newRobot = new Robot() { Position = position, Energy = NewRobotEnergy, Owner = myRobot.Owner };
+                var newRobot = new Robot() { Position = position, Energy = NewRobotEnergy, OwnerName = myRobot.OwnerName };
                 robots.Add(newRobot);
                 myRobot.Energy -= energyLoss;
 

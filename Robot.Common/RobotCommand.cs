@@ -33,7 +33,7 @@ namespace Robot.Common
 
     public class UpdateViewAfterRobotStepEventArgs:EventArgs
     {
-        public Owner Owner;
+        public string OwnerName;
         public Position RobotPosition;
         public Position NewRobotPosition;
         //Father+ son energy change - just for update view currently are not used

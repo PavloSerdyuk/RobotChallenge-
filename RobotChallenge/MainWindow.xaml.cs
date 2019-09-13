@@ -48,10 +48,10 @@ namespace RobotChallenge
 
             var c = new SolidColorBrush(Colors.Red);
             var n = "";
-            if (args.Owner != null)
+            if (args.OwnerName != null)
             {
-                c = new SolidColorBrush(ColorsFactory.OwnerColors[args.Owner]);
-                n = args.Owner.Name;
+                c = new SolidColorBrush(ColorsFactory.OwnerColors[args.OwnerName]);
+                n = args.OwnerName;
             }
 
             if (!IsLogVisisble()) return;
@@ -109,7 +109,7 @@ namespace RobotChallenge
         {
             foreach (var robot in robots)
             {
-                CreateRobot(robot.Owner, robot.Position);
+                CreateRobot(robot.OwnerName, robot.Position);
             }
 
         }
@@ -161,7 +161,7 @@ namespace RobotChallenge
             {
                 if (args.NewRobotPosition != null)
                 {
-                    CreateRobot(args.Owner, args.NewRobotPosition);
+                    CreateRobot(args.OwnerName, args.NewRobotPosition);
                     var r = RobotPlace[args.NewRobotPosition];
                     currentAnimation = r.AnimateOpacity();
                     currentAnimation.Completed += new EventHandler(ViewUpdatedChanged);
@@ -243,10 +243,10 @@ namespace RobotChallenge
             control.Left = position.X * CellWidth;
         }
 
-        private void CreateRobot(Owner owner, Position position)
+        private void CreateRobot(string ownerName, Position position)
         {
             var control = new RobotControl();
-            control.BackgroundPanel.Fill = new SolidColorBrush(ColorsFactory.OwnerColors[owner]);
+            control.BackgroundPanel.Fill = new SolidColorBrush(ColorsFactory.OwnerColors[ownerName]);
             RobotGrid.Children.Add(control);
             control.BackgroundPanel.Height = CellWidth;
             control.BackgroundPanel.Width = CellWidth;

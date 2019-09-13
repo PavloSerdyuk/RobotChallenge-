@@ -15,7 +15,7 @@ namespace RobotChallenge
         {
             TotalEnergy = stat.TotalEnergy;
             RobotsCount = stat.RobotsCount;
-            Name = stat.Owner.Name;
+            Name = stat.Owner;
             Color = new SolidColorBrush( ColorsFactory.OwnerColors[stat.Owner]);
         }
     }

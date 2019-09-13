@@ -86,7 +86,7 @@ namespace Robot.Common
                 movedRobot.Energy -= (int)(movedRobot.Energy * stoleRate);
                 result.MovedFrom.Insert(0, movedFrom);
                 result.MovedTo.Insert(0, movedRobot.Position);
-                Description = $"Attacked {movedRobot.Owner.Name} robot at ({NewPosition})";
+                Description = $"Attacked {movedRobot.OwnerName} robot at ({NewPosition})";
             }
 
             return result;

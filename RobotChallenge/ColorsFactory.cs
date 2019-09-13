@@ -9,7 +9,7 @@ namespace RobotChallenge
 {
     public class ColorsFactory
     {
-        public static Dictionary<Owner, Color> OwnerColors;
+        public static Dictionary<string, Color> OwnerColors;
 
 
         public static void Initialize(List<Owner> owners)
@@ -65,11 +65,11 @@ namespace RobotChallenge
                                  Colors.Coral*/
 
             int colorIndex = 0;
-            OwnerColors = new Dictionary<Owner, Color>();
+            OwnerColors = new Dictionary<string, Color>();
 
             foreach (var owner in owners)
             {
-                OwnerColors.Add(owner, colors[colorIndex]);
+                OwnerColors.Add(owner.Name, colors[colorIndex]);
                 colorIndex++;
             }
         }
