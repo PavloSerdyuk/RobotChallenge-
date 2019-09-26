@@ -16,6 +16,8 @@ namespace Robot.Common
             if (resources.Count == 0)
                 Description = "FAILED: no resource to collect energy";
 
+            int totalCollectedEnergy = 0;
+            
             foreach (var energyStation in resources)
             {
                 if (energyStation != null)
@@ -24,16 +26,16 @@ namespace Robot.Common
                     myRobot.Energy += energy;
                     energyStation.Energy -= energy;
                     result.TotalEnergyChange = energy;
-                    Description = String.Format("COLLECT: {0}", energy);
+                    totalCollectedEnergy += energy;
                 }
                 else
                 {
-                    Description = "ERROR: station is null";
-                }
-                
+                    //Description = "ERROR: station is null";
+                }                
             }
             
-
+            Description = String.Format("COLLECT: {0}", totalCollectedEnergy);
+                    
             return result;
         }
     }
