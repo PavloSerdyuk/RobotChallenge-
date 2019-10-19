@@ -206,11 +206,9 @@ namespace Robot.Tournament
 
                     if (allowedCommands.Contains(type))
                     {
-                        //command.RobotStepCompleted += _callback;
                         args = command.ChangeModel(Robots, _currentRobotIndex, Map);
                         args.OwnerName = ownerName;
                         args.RobotPosition = Robots[_currentRobotIndex].Position;
-                        //command.Apply(Robots, _currentRobotIndex, Map);
                         Logger.LogMessage(ownerName, command.Description, LogValue.Normal);
                     }
                     else
