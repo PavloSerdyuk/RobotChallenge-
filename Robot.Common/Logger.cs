@@ -12,7 +12,7 @@ namespace Robot.Common
     {
         //made setter private so student won't be able to change this value for students that recieve event after him
         public int Number { get; private set; }
-        public LogRoundEventArgs(int number)
+        internal LogRoundEventArgs(int number)
         {
             this.Number = number;
         }
@@ -40,7 +40,7 @@ namespace Robot.Common
     {
         public static event LogRoundEventHandler OnLogRound;
 
-        public static void LogRound(int roundNumber)
+        internal static void LogRound(int roundNumber)
         {
             Debug.WriteLine($"ROUND NOMBER: {roundNumber}");
             OnLogRound?.Invoke(null, new LogRoundEventArgs(roundNumber));
