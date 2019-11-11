@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Robot.Tournament")]
 namespace Robot.Common
 {
     public enum LogValue { High, Normal, Low, Error }
@@ -8,29 +10,24 @@ namespace Robot.Common
 
     public class LogRoundEventArgs
     {
-        public int Number { get; set; }
+        //made setter private so student won't be able to change this value for students that recieve event after him
+        public int Number { get; private set; }
+        internal LogRoundEventArgs(int number)
+        {
+            this.Number = number;
+        }
     }
 
     public class LogEventArgs
     {
-        public string OwnerName { get; set; }
-        public string Message { get; set; }
-        public LogValue Priority { get; set; }
+        //made setter for these private so student won't be able to change this value for students that recieve event after him
+        public string OwnerName { get; private set; }
+        public string Message { get; private set; }
+        public LogValue Priority { get; private set; }
 
-        public LogEventArgs()
-        {
-        }
-
-        public LogEventArgs(string owner, string message)
+        internal LogEventArgs(string owner, string message, LogValue priority = LogValue.Normal)
         {
             OwnerName = owner;
-            Message = message;
-            Priority = LogValue.Normal;
-        }
-
-        public LogEventArgs(string owner, string message, LogValue priority)
-        {
-            OwnerName  = owner;
             Message = message;
             Priority = priority;
         }
@@ -43,10 +40,10 @@ namespace Robot.Common
     {
         public static event LogRoundEventHandler OnLogRound;
 
-        public static void LogRound(int roundNumber)
+        internal static void LogRound(int roundNumber)
         {
             Debug.WriteLine($"ROUND NOMBER: {roundNumber}");
-            OnLogRound?.Invoke(null, new LogRoundEventArgs() { Number = roundNumber });
+            OnLogRound?.Invoke(null, new LogRoundEventArgs(roundNumber));
         }
 
         public static event LogEventHandler OnLogMessage;
@@ -57,8 +54,8 @@ namespace Robot.Common
             OnLogMessage?.Invoke(null, e);
         }
 
-        
-        public static void LogMessage(string owner, string message, LogValue priority = LogValue.Normal)
+
+        internal static void LogMessage(string owner, string message, LogValue priority = LogValue.Normal)
         {
             LogMessage(new LogEventArgs(owner, message, priority));
         }
