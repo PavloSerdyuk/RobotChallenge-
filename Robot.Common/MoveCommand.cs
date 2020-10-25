@@ -74,8 +74,8 @@ namespace Robot.Common
 
             if (movedRobot != null)
             {
-                var newX = Math.Max(0, Math.Min(2 * NewPosition.X - oldPosition.X, 99));
-                var newY = Math.Max(0, Math.Min(2 * NewPosition.Y - oldPosition.Y, 99));
+                var newX = (2 * NewPosition.X - oldPosition.X) % 100;
+                var newY = (2 * NewPosition.Y - oldPosition.Y) % 100;
                 var movedFrom = movedRobot.Position;
                 var movedTo = map.FindFreeCell(new Position(newX, newY), robots); ;
                 movedRobot.Position = movedTo;
