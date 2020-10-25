@@ -27,7 +27,7 @@ namespace Robot.Common
         public Position FindFreeCell(Position nearPosition, IList<Robot> robots)
         {
             var distance = 1;
-            while (distance < 100)
+            while (distance <= 100)
             {
                 for (int i = -distance; i <= distance; i++)
                     for (int j = -distance; j <= distance; j++)

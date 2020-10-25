@@ -18,11 +18,12 @@ namespace Robot.Common
             var energyLoss = energyLossToCreateNewRobot + NewRobotEnergy;
 
             //Fix hack with incorrect value of energy
-            if (NewRobotEnergy <= 0 || NewRobotEnergy > Int32.MaxValue/2)
+            if (NewRobotEnergy <= 0 || NewRobotEnergy > Int32.MaxValue / 2)
             {
                 Description = $"FAILED: illegal value for new robot energy of {myRobot.OwnerName} .";
 
-            } else if (robots.Count(r => r.OwnerName == myRobot.OwnerName) >= 100)
+            }
+            else if (robots.Count(r => r.OwnerName == myRobot.OwnerName) >= 100)
             {
                 Description = $"FAILED: number of {myRobot.OwnerName} robots reached 100.";
             }
@@ -36,7 +37,7 @@ namespace Robot.Common
                 result.NewRobotPosition = position;
                 result.TotalEnergyChange = -energyLossToCreateNewRobot;
 
-                Description = $"New: {result.NewRobotPosition}";
+                Description = $"New: {result.NewRobotPosition} remains energy {myRobot.Energy}";
             }
             else
             {
@@ -47,5 +48,5 @@ namespace Robot.Common
         }
     }
 
-    
+
 }
