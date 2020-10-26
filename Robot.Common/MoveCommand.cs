@@ -70,23 +70,24 @@ namespace Robot.Common
 
             myRobot.Energy -= moveEnergyLoss;
             myRobot.Position = NewPosition;
-            Description = String.Format("MOVE: {0}-> {1}", oldPosition, NewPosition);
+            Description = String.Format("Move {0}->{1} lost {2} rem {3}", oldPosition, NewPosition, moveEnergyLoss, myRobot.Energy);
 
             if (movedRobot != null)
             {
-                var newX = 2*NewPosition.X - oldPosition.X;
-                var newY = 2 * NewPosition.Y - oldPosition.Y;
+                var newX = (2 * NewPosition.X - oldPosition.X) % 100;
+                var newY = (2 * NewPosition.Y - oldPosition.Y) % 100;
                 var movedFrom = movedRobot.Position;
                 var movedTo = map.FindFreeCell(new Position(newX, newY), robots); ;
                 movedRobot.Position = movedTo;
 
                 //Stole energy
                 var stoleRate = Variant.GetInstance().StoleRateEnergyAtAttack;
-                myRobot.Energy += (int)(movedRobot.Energy*stoleRate);
+                int stoleEnergy = (int)(movedRobot.Energy * stoleRate);
+                myRobot.Energy += stoleEnergy;
                 movedRobot.Energy -= (int)(movedRobot.Energy * stoleRate);
                 result.MovedFrom.Insert(0, movedFrom);
                 result.MovedTo.Insert(0, movedRobot.Position);
-                Description = $"Attacked {movedRobot.OwnerName} robot at ({NewPosition})";
+                Description = $"Atk {movedRobot.OwnerName} at ({NewPosition}) stl {stoleEnergy} loss {moveEnergyLoss}";
             }
 
             return result;
